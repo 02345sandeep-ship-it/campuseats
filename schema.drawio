@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram name="CampusEats Database Schema" id="campuseats-schema">
+    <mxGraphModel dx="1717" dy="937" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;users&lt;/b&gt;&lt;br&gt;PK user_id : INT&lt;br&gt;name : VARCHAR(100)&lt;br&gt;email : VARCHAR(150) UNIQUE&lt;br&gt;phone : VARCHAR(20)" vertex="1">
+          <mxGeometry height="150" width="250" x="60" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="addresses" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;addresses&lt;/b&gt;&lt;br&gt;PK address_id : INT&lt;br&gt;FK user_id : INT&lt;br&gt;address_line : VARCHAR(255)&lt;br&gt;city : VARCHAR(100)&lt;br&gt;postal_code : VARCHAR(20)&lt;br&gt;is_default : BOOLEAN" vertex="1">
+          <mxGeometry height="175" width="250" x="50" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="login" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;login&lt;/b&gt;&lt;br&gt;PK login_id : INT&lt;br&gt;FK user_id : INT UNIQUE&lt;br&gt;username : VARCHAR(100) UNIQUE&lt;br&gt;password_hash : VARCHAR(255)" vertex="1">
+          <mxGeometry height="150" width="250" x="60" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="restaurants" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;restaurants&lt;/b&gt;&lt;br&gt;PK restaurant_id : INT&lt;br&gt;name : VARCHAR(150)&lt;br&gt;area : VARCHAR(100)&lt;br&gt;address : VARCHAR(255)&lt;br&gt;status : VARCHAR(30)" vertex="1">
+          <mxGeometry height="165" width="260" x="360" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="menus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;menus&lt;/b&gt;&lt;br&gt;PK menu_id : INT&lt;br&gt;FK restaurant_id : INT&lt;br&gt;item_name : VARCHAR(150)&lt;br&gt;description : VARCHAR(500)&lt;br&gt;availability : BOOLEAN" vertex="1">
+          <mxGeometry height="165" width="260" x="360" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="prices" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;prices&lt;/b&gt;&lt;br&gt;PK price_id : INT&lt;br&gt;FK menu_id : INT&lt;br&gt;amount : DECIMAL(10,2)&lt;br&gt;currency : VARCHAR(10)" vertex="1">
+          <mxGeometry height="140" width="260" x="360" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="carts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;carts&lt;/b&gt;&lt;br&gt;PK cart_id : INT&lt;br&gt;user_id : INT&lt;br&gt;created_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="125" width="250" x="680" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="orders" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;orders&lt;/b&gt;&lt;br&gt;PK order_id : INT&lt;br&gt;user_id : INT&lt;br&gt;delivery_address_id : INT&lt;br&gt;total : DECIMAL(10,2)&lt;br&gt;status : VARCHAR(30)&lt;br&gt;created_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="175" width="250" x="680" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="order_status" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;order_status&lt;/b&gt;&lt;br&gt;PK status_id : INT&lt;br&gt;FK order_id : INT&lt;br&gt;status : VARCHAR(30)&lt;br&gt;changed_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="140" width="250" x="680" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="transactions" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;transactions&lt;/b&gt;&lt;br&gt;PK transaction_id : INT&lt;br&gt;order_id : INT&lt;br&gt;amount : DECIMAL(10,2)&lt;br&gt;payment_method : VARCHAR(50)&lt;br&gt;status : VARCHAR(30)&lt;br&gt;created_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="175" width="270" x="990" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="refunds" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;refunds&lt;/b&gt;&lt;br&gt;PK refund_id : INT&lt;br&gt;FK transaction_id : INT&lt;br&gt;amount : DECIMAL(10,2)&lt;br&gt;reason : VARCHAR(255)&lt;br&gt;status : VARCHAR(30)&lt;br&gt;created_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="175" width="270" x="990" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="riders" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;riders&lt;/b&gt;&lt;br&gt;PK rider_id : INT&lt;br&gt;name : VARCHAR(100)&lt;br&gt;phone : VARCHAR(20)&lt;br&gt;status : VARCHAR(30)" vertex="1">
+          <mxGeometry height="145" width="270" x="990" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="assignments" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;assignments&lt;/b&gt;&lt;br&gt;PK assignment_id : INT&lt;br&gt;order_id : INT&lt;br&gt;FK rider_id : INT&lt;br&gt;status : VARCHAR(30)&lt;br&gt;assigned_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="160" width="270" x="990" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="message_log" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2f0d9;strokeColor=#70ad47;fontSize=14;align=left;spacing=8;" value="&lt;b&gt;message_log&lt;/b&gt;&lt;br&gt;PK message_id : INT&lt;br&gt;user_id : INT&lt;br&gt;message : VARCHAR(500)&lt;br&gt;channel : VARCHAR(30)&lt;br&gt;status : VARCHAR(30)&lt;br&gt;sent_at : TIMESTAMP" vertex="1">
+          <mxGeometry height="175" width="270" x="1320" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmany;startArrow=ERone;strokeWidth=1.5;" target="addresses" value="1 : N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERone;startArrow=ERone;strokeWidth=1.5;" target="login" value="1 : 1">
+          <mxGeometry relative="1" x="0.5556" y="5" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="restaurants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmany;startArrow=ERone;strokeWidth=1.5;" target="menus" value="1 : N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="menus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERone;startArrow=ERone;strokeWidth=1.5;" target="prices" value="1 : 1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmany;startArrow=ERone;strokeWidth=1.5;" target="order_status" value="1 : N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="transactions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmany;startArrow=ERone;strokeWidth=1.5;" target="refunds" value="1 : N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="riders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmany;startArrow=ERone;strokeWidth=1.5;" target="assignments" value="1 : N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

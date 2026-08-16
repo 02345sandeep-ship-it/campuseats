@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram name="Service Design" id="campuseats-services">
+    <mxGraphModel dx="1212" dy="661" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="accounts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;ACCOUNTS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• users&lt;br&gt;• addresses&lt;br&gt;• login&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="70" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="catalogue" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;CATALOGUE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• restaurants&lt;br&gt;• menus&lt;br&gt;• prices&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="370" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="orders" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;ORDERS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• carts&lt;br&gt;• orders&lt;br&gt;• order status&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="670" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="payments" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;PAYMENTS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• transactions&lt;br&gt;• refunds&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="970" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="delivery" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;DELIVERY&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• riders&lt;br&gt;• assignments&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="520" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="notifications" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;align=left;verticalAlign=middle;spacing=12;" value="&lt;b&gt;NOTIFICATIONS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Owns:&lt;br&gt;• message log&lt;br&gt;&lt;br&gt;Member: Sandeep Gupta" vertex="1">
+          <mxGeometry height="190" width="250" x="820" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_oc" edge="1" parent="1" source="orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;labelBackgroundColor=#ffffff;" target="catalogue" value="checkItem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_op" edge="1" parent="1" source="orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;labelBackgroundColor=#ffffff;" target="payments" value="charge / refund">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_od" edge="1" parent="1" source="orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;labelBackgroundColor=#ffffff;" target="delivery" value="assignRider">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_on" edge="1" parent="1" source="orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;labelBackgroundColor=#ffffff;" target="notifications" value="send">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
