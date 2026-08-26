@@ -13,10 +13,10 @@ The assignment focuses on understanding HTTP requests and responses, inspecting 
 
 ## Team Members:
 
-Sandeep Gupta 20252651045
-Deepankar Bej 20252651018
-Rikam Gouda 20252651040
-Shivam Rajput 20252651052
+Sandeep Gupta - 20252651045 \
+Deepankar Bej - 20252651018 \
+Rikam Gouda - 20252651040 \
+Shivam Rajput - 20252651052
 
 ## Assignment Contents
 
