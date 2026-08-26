@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:uni="urn:unipay"
+    targetNamespace="urn:unipay">
+
+    <!-- types -->
+    <types>
+        <xsd:schema targetNamespace="urn:unipay">
+
+            <!-- auth -->
+            <xsd:element name="auth">
+                <xsd:complexType>
+                    <xsd:attribute
+                        name="token"
+                        type="xsd:string"
+                        use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- request -->
+            <xsd:element name="charge">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element
+                            name="cardToken"
+                            type="xsd:string"/>
+                        <xsd:element
+                            name="amount"
+                            type="xsd:decimal"/>
+                        <xsd:element
+                            name="currency"
+                            type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- response -->
+            <xsd:element name="chargeResult">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element
+                            name="transactionId"
+                            type="xsd:string"/>
+                        <xsd:element
+                            name="status"
+                            type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- error -->
+            <xsd:element name="error">
+                <xsd:complexType>
+                    <xsd:attribute
+                        name="code"
+                        type="xsd:string"
+                        use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+
+        </xsd:schema>
+    </types>
+
+    <!-- messages -->
+
+    <message name="chargeRequest">
+        <part
+            name="body"
+            element="uni:charge"/>
+    </message>
+
+    <message name="chargeResponse">
+        <part
+            name="body"
+            element="uni:chargeResult"/>
+    </message>
+
+    <message name="authHeader">
+        <part
+            name="auth"
+            element="uni:auth"/>
+    </message>
+
+    <!-- port type -->
+
+    <portType name="Payments">
+
+        <operation name="charge">
+
+            <input message="uni:chargeRequest"/>
+
+            <output message="uni:chargeResponse"/>
+
+        </operation>
+
+    </portType>
+
+    <!-- binding -->
+
+    <binding
+        name="PaymentsSOAP"
+        type="uni:Payments">
+
+        <soap:binding
+            transport="http://schemas.xmlsoap.org/soap/http"
+            style="document"/>
+
+        <operation name="charge">
+
+            <soap:operation
+                soapAction="urn:unipay:charge"/>
+
+            <input>
+
+                <soap:header
+                    message="uni:authHeader"
+                    part="auth"
+                    use="literal"/>
+
+                <soap:body use="literal"/>
+
+            </input>
+
+            <output>
+
+                <soap:body use="literal"/>
+
+            </output>
+
+        </operation>
+
+    </binding>
+
+    <!-- service -->
+
+    <service name="PaymentsService">
+
+        <port
+            name="PaymentsSOAP"
+            binding="uni:PaymentsSOAP">
+
+            <soap:address
+                location="https://api.unipay.example/pay"/>
+
+        </port>
+
+    </service>
+
+</definitions>
