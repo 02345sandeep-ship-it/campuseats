@@ -2,6 +2,13 @@
 
 # Rebuilding a CampusEats Service in REST
 
+## Team Members
+
+1. Sandeep Gupta - 20252651045
+2. Deepankar Bej - 20252651018
+3. Rikam Gouda - 20252651040
+4. Shivam Rajput - 20252651052
+
 ## Part A — Model the Service
 
 ### A1 — Selected Service
@@ -140,6 +147,8 @@ SOAP is still a reasonable choice in **banking and financial transaction systems
 
 # Manual Validation
 
+The Orders service was run on port **8081** and the Payments service was run on port **8082**.
+
 ## 1. Health check
 
 ```powershell
@@ -183,7 +192,7 @@ Expected: 200 with order data.
 ## 6. List orders
 
 ```powershell
-Invoke-RestMethod -Uri http://localhost:8081/orders?studentId=17 -Method GET
+Invoke-RestMethod -Uri "http://localhost:8081/orders?studentId=17" -Method GET
 ```
 
 Expected: 200 with array of orders.
@@ -194,7 +203,7 @@ Expected: 200 with array of orders.
 Invoke-RestMethod -Uri http://localhost:8081/orders/1/cancellation -Method POST
 ```
 
-Expected: 202 with order status changed to "cancelled".
+Expected: 202 with order status changed to `"cancelled"`.
 
 ## 8. Unknown order → 404
 
@@ -231,3 +240,114 @@ Invoke-RestMethod -Uri http://localhost:8081/orders -Method POST -ContentType "a
 ```
 
 Expected: 422 with Problem JSON.
+
+---
+
+# curl -i Transcript
+
+The following transcript was captured from the running Orders service using `curl.exe -i`.
+
+## 1. Successful order creation
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i -X POST "http://localhost:8081/orders" -H "Content-Type: application/json" -H "Idempotency-Key: curl-test-001" --data-binary "@order.json"
+
+HTTP/1.1 201 CREATED
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:20:38 GMT
+Content-Type: application/json
+Content-Length: 80
+Location: /orders/1
+Connection: close
+
+{"id":1,"items":[{"itemId":101,"quantity":2}],"status":"placed","studentId":17}
+```
+
+## 2. Same request with the same Idempotency-Key
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i -X POST "http://localhost:8081/orders" -H "Content-Type: application/json" -H "Idempotency-Key: curl-test-001" --data-binary "@order.json"
+
+HTTP/1.1 201 CREATED
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:21:10 GMT
+Content-Type: application/json
+Content-Length: 80
+Location: /orders/1
+Connection: close
+
+{"id":1,"items":[{"itemId":101,"quantity":2}],"status":"placed","studentId":17}
+```
+
+The same order ID (`1`) was returned, showing that the request did not create a duplicate order.
+
+## 3. Malformed request body
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i -X POST "http://localhost:8081/orders" -H "Content-Type: application/json" -H "Idempotency-Key: curl-bad-001" --data-raw "hello"
+
+HTTP/1.1 400 BAD REQUEST
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:21:35 GMT
+Content-Type: application/json
+Content-Length: 121
+Connection: close
+
+{"detail":"Request body must be a JSON object.","status":400,"title":"Invalid request","type":"/errors/invalid-request"}
+```
+
+## 4. Missing order
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i "http://localhost:8081/orders/9999"
+
+HTTP/1.1 404 NOT FOUND
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:22:06 GMT
+Content-Type: application/json
+Content-Length: 115
+Connection: close
+
+{"detail":"No order exists with id 9999.","status":404,"title":"Order not found","type":"/errors/order-not-found"}
+```
+
+## 5. Cancel order
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i -X POST "http://localhost:8081/orders/1/cancellation"
+
+HTTP/1.1 202 ACCEPTED
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:22:38 GMT
+Content-Type: application/json
+Content-Length: 83
+Connection: close
+
+{"id":1,"items":[{"itemId":101,"quantity":2}],"status":"cancelled","studentId":17}
+```
+
+## 6. Cancel the already-cancelled order
+
+```text
+PS D:\Classroom\3rd Sem\Web Services\CampusEats\campuseats> curl.exe -i -X POST "http://localhost:8081/orders/1/cancellation"
+
+HTTP/1.1 409 CONFLICT
+Server: Werkzeug/3.1.8 Python/3.14.7
+Date: Tue, 08 Sep 2026 17:23:49 GMT
+Content-Type: application/json
+Content-Length: 139
+Connection: close
+
+{"detail":"The order has already been cancelled.","status":409,"title":"Order already cancelled","type":"/errors/order-already-cancelled"}
+```
+
+## Validation Summary
+
+| Test | HTTP Result |
+|---|---|
+| Successful order creation | 201 Created |
+| Same Idempotency-Key | 201 Created, same order ID |
+| Malformed request body | 400 Bad Request |
+| Missing order | 404 Not Found |
+| Cancel order | 202 Accepted |
+| Cancel already-cancelled order | 409 Conflict |
