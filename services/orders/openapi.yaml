@@ -5,6 +5,9 @@ info:
   version: "1.0.0"
   description: REST API for managing CampusEats orders.
 
+security:
+  - bearerAuth: []
+
 servers:
   - url: http://localhost:8081
 
@@ -89,6 +92,13 @@ paths:
       responses:
         "200":
           description: Order returned
+          headers:
+            ETag:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -96,6 +106,41 @@ paths:
 
         "404":
           $ref: "#/components/responses/NotFound"
+
+    put:
+      summary: Replace an order representation using optimistic concurrency
+      operationId: replaceOrder
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+        - $ref: "#/components/parameters/IfMatch"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "200":
+          description: Order replaced
+          headers:
+            ETag:
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "412":
+          $ref: "#/components/responses/PreconditionFailed"
+        "428":
+          $ref: "#/components/responses/PreconditionRequired"
 
 
   /orders/{id}/cancellation:
@@ -173,6 +218,14 @@ components:
         type: string
         minLength: 1
 
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      description: ETag read from the current order representation.
+      schema:
+        type: string
+
 
   responses:
 
@@ -206,6 +259,20 @@ components:
 
     ServiceUnavailable:
       description: Required downstream service is unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
+    PreconditionFailed:
+      description: The supplied If-Match ETag is stale.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
+    PreconditionRequired:
+      description: An update requires an If-Match header.
       content:
         application/json:
           schema:
@@ -314,3 +381,9 @@ components:
           type: integer
         detail:
           type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token

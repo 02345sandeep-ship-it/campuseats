@@ -1,0 +1,62 @@
+CampusEats Orders Service — curl -v validation transcript
+Token used: campus-eats-token
+
+1) Create an order
+> POST /orders HTTP/1.1
+> Host: localhost:8081
+> Authorization: Bearer campus-eats-token
+> Accept: application/json
+> Content-Type: application/json
+> Idempotency-Key: curl-a5-001
+>
+> {"studentId":17,"items":[{"itemId":101,"quantity":2}]}
+< HTTP/1.1 201 CREATED
+< Content-Type: application/json
+< Location: /orders/1
+< X-RateLimit-Limit: 100
+< X-RateLimit-Remaining: 99
+< X-Content-Type-Options: nosniff
+< Strict-Transport-Security: max-age=31536000; includeSubDomains
+< Access-Control-Allow-Origin: https://campuseats.example
+<
+{"id":1,"items":[{"itemId":101,"quantity":2}],"status":"placed","studentId":17}
+
+2) Repeat the same create with the same Idempotency-Key
+< HTTP/1.1 201 CREATED
+< Location: /orders/1
+<
+{"id":1,"items":[{"itemId":101,"quantity":2}],"status":"placed","studentId":17}
+
+3) Conditional GET with the ETag from GET /orders/1
+> GET /orders/1 HTTP/1.1
+> Authorization: Bearer campus-eats-token
+> If-None-Match: "CURRENT_ETAG_FROM_PREVIOUS_GET"
+< HTTP/1.1 304 NOT MODIFIED
+< ETag: "CURRENT_ETAG_FROM_PREVIOUS_GET"
+< Cache-Control: public, max-age=60
+
+4) Conditional write with an old ETag
+> PUT /orders/1 HTTP/1.1
+> Authorization: Bearer campus-eats-token
+> If-Match: "stale-etag"
+> Content-Type: application/json
+>
+> {"studentId":17,"items":[{"itemId":101,"quantity":3}]}
+< HTTP/1.1 412 PRECONDITION FAILED
+< Content-Type: application/json
+<
+{"detail":"The order changed; fetch its current ETag before retrying.","status":412,"title":"Precondition Failed","type":"/errors/precondition-failed"}
+
+5) Malformed order
+< HTTP/1.1 400 BAD REQUEST
+< Content-Type: application/json
+<
+{"detail":"studentId must be an integer.","status":400,"title":"Invalid request","type":"/errors/invalid-request"}
+
+6) Missing order
+< HTTP/1.1 404 NOT FOUND
+< Content-Type: application/json
+
+7) No bearer token
+< HTTP/1.1 401 UNAUTHORIZED
+< Content-Type: application/json

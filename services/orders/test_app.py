@@ -7,17 +7,19 @@ from app import app
 def client():
     app.config["TESTING"] = True
     with app.test_client() as client:
+        client.environ_base["HTTP_AUTHORIZATION"] = "Bearer campus-eats-token"
         yield client
 
 
 @pytest.fixture(autouse=True)
 def reset_store():
     """Reset the store and idempotency store before each test."""
-    from app import store, idempotency_store
+    from app import store, idempotency_store, rate_limits
     store.orders.clear()
     store.carts.clear()
     store.next_order_id = 1
     idempotency_store.clear()
+    rate_limits.clear()
 
 
 # --- Cart tests ---
@@ -143,6 +145,35 @@ def test_get_order_unknown_returns_404(client):
     assert resp.status_code == 404
     data = resp.get_json()
     assert data["status"] == 404
+
+
+@patch("app.call_payment_service", return_value="success")
+def test_conditional_get_and_stale_update(mock_pay, client):
+    created = client.post("/orders", json={
+        "studentId": 17, "items": [{"itemId": 101, "quantity": 1}]
+    }, headers={"Idempotency-Key": "key-etag"})
+    order_id = created.get_json()["id"]
+    read = client.get(f"/orders/{order_id}")
+    etag = read.headers["ETag"]
+
+    assert client.get(f"/orders/{order_id}", headers={"If-None-Match": etag}).status_code == 304
+    stale = client.put(f"/orders/{order_id}", json={
+        "studentId": 17, "items": [{"itemId": 101, "quantity": 3}]
+    }, headers={"If-Match": '"stale"'})
+    assert stale.status_code == 412
+
+
+def test_missing_authorization_returns_401(client):
+    response = client.get("/orders/1", headers={"Authorization": ""})
+    assert response.status_code == 401
+
+
+def test_options_and_not_acceptable(client):
+    options = client.open("/orders", method="OPTIONS")
+    assert options.status_code == 204
+    assert options.headers["Allow"] == "GET, POST, OPTIONS"
+    assert options.headers["Access-Control-Allow-Origin"] == "https://campuseats.example"
+    assert client.get("/orders/1", headers={"Accept": "text/html"}).status_code == 406
 
 
 # --- List orders tests ---

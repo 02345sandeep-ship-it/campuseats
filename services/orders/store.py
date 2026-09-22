@@ -36,6 +36,16 @@ class Store:
 
         return order
 
+    def replace_order(self, order_id, student_id, items):
+        """Replace the editable representation of an existing order."""
+        order = self.orders.get(order_id)
+
+        if order:
+            order.student_id = student_id
+            order.items = items
+
+        return order
+
     def add_cart_item(self, student_id, item_id, quantity):
         if student_id not in self.carts:
             self.carts[student_id] = Cart(student_id)
