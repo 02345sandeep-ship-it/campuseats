@@ -9,9 +9,9 @@
 | Rikam Gouda | 20252651040 |
 | Shivam Rajput | 20252651052 |
 
-The executable service is in [`services/orders`](../services/orders). Its OpenAPI contract is
-[`openapi.yaml`](../services/orders/openapi.yaml), and its automated tests are in
-[`test_app.py`](../services/orders/test_app.py).
+The executable service is in [`services/orders`](../../services/orders). Its OpenAPI contract is
+[`openapi.yaml`](../../services/orders/openapi.yaml), and its automated tests are in
+[`test_app.py`](../../services/orders/test_app.py).
 
 ## CampusEats method map
 
