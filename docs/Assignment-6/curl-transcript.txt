@@ -1,0 +1,25 @@
+# Run Payments on 8082 and Orders on 8081. Replace TOKEN only if API_TOKEN was changed.
+TOKEN='Authorization: Bearer campus-eats-token'
+BODY='{"studentId":17,"address":"Hostel A, Room 12","items":[{"itemId":101,"quantity":2}]}'
+
+# Success: 201, Location, and JSON body
+curl -i -X POST http://localhost:8081/orders -H "$TOKEN" -H 'Content-Type: application/json' -H 'Idempotency-Key: a06-001' --data "$BODY"
+
+# Same key: repeats the original 201 and order without a second payment
+curl -i -X POST http://localhost:8081/orders -H "$TOKEN" -H 'Content-Type: application/json' -H 'Idempotency-Key: a06-001' --data "$BODY"
+
+# Empty cart and quantity <= 0: 422 Problem Details with errors[]
+curl -i -X POST http://localhost:8081/orders -H "$TOKEN" -H 'Content-Type: application/json' -H 'Idempotency-Key: a06-empty' --data '{"studentId":17,"address":"Hostel A","items":[]}'
+curl -i -X POST http://localhost:8081/orders -H "$TOKEN" -H 'Content-Type: application/json' -H 'Idempotency-Key: a06-qty' --data '{"studentId":17,"address":"Hostel A","items":[{"itemId":101,"quantity":0}]}'
+
+# Unknown order, cancellation, and illegal transition
+curl -i http://localhost:8081/orders/999 -H "$TOKEN"
+curl -i -X DELETE http://localhost:8081/orders/1 -H "$TOKEN"
+curl -i -X DELETE http://localhost:8081/orders/1 -H "$TOKEN"
+
+# XML negotiation check: 406 Problem Details
+curl -i http://localhost:8081/orders/1 -H "$TOKEN" -H 'Accept: application/xml'
+
+# Rate-limit check: start Orders with RATE_LIMIT=1, then run twice.
+curl -i http://localhost:8081/orders/1 -H "$TOKEN"
+curl -i http://localhost:8081/orders/1 -H "$TOKEN"
