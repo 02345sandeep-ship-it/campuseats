@@ -4,7 +4,7 @@
 
 1. Sandeep Gupta - 20252651045
 2. Deepankar Bej - 20252651018
-3. Rik am Gouda - 20252651040
+3. Rikam Gouda - 20252651040
 4. Shivam Rajput - 20252651052
 
 ## Outcome map
