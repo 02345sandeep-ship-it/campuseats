@@ -1,0 +1,6 @@
+Command: npx --yes @redocly/cli lint services/orders/openapi.yaml
+
+Result: OpenAPI contract validated successfully with 0 errors.
+
+The validator reports only recommended-practice warnings for the local development
+server URL, a health check with no 4xx response, and the academic license URL.
