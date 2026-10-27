@@ -1,0 +1,26 @@
+{
+  "name": "campuseats-graphql",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CampusEats CS543 Assignment 7 GraphQL Dishes service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "db:init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-db.ps1",
+    "db:test:init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-db.ps1 -TestDatabase",
+    "demo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-demo.ps1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.5.1",
+    "@as-integrations/express4": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "graphql": "^16.10.0",
+    "mysql2": "^3.14.0"
+  }
+}

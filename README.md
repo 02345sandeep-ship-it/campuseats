@@ -30,3 +30,7 @@ Shivam Rajput - 20252651052
 - Google Chrome DevTools
 - Git
 - VS Code
+
+# CS543 Web Services — Assignment 7: GraphQL
+
+The GraphQL Dishes/Menu service, setup steps, operations, team list, and demo checklist are documented in [`docs/assignment-7/README.md`](docs/assignment-7/README.md). It runs independently from the existing Orders and Payments services under `services/graphql`.
