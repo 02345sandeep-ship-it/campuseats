@@ -1,0 +1,31 @@
+{
+  "info": {
+    "_postman_id": "c5e7a1d2-8c2b-4f66-9d31-7bde8e8c5430",
+    "name": "CampusEats Catalogue API — CS543 Tutorial 08",
+    "description": "Requests for the GET, POST and optional DELETE endpoints. Start the Express server on localhost:3000 before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET — List all dishes",
+      "request": { "method": "GET", "header": [], "url": "http://localhost:3000/items" }
+    },
+    {
+      "name": "GET — Get dish by ID (1)",
+      "request": { "method": "GET", "header": [], "url": "http://localhost:3000/items/1" }
+    },
+    {
+      "name": "POST — Add a dish",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Masala Dosa\",\n  \"price\": 60\n}", "options": { "raw": { "language": "json" } } },
+        "url": "http://localhost:3000/items"
+      }
+    },
+    {
+      "name": "DELETE — Delete dish by ID (3; add it first)",
+      "request": { "method": "DELETE", "header": [], "url": "http://localhost:3000/items/3" }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CampusEats food catalogue powered by a Node.js and Express REST API.">
+  <title>CampusEats | Food Catalogue</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <div class="brand-mark" aria-hidden="true">CE</div>
+      <div>
+        <p class="eyebrow">CAMPUS FOOD MENU</p>
+        <h1>CampusEats Catalogue</h1>
+        <p class="sub">A simple food catalogue powered by a REST API (Node.js + Express).</p>
+      </div>
+    </header>
+
+    <section class="menu-section" aria-labelledby="menu-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">EXPLORE</p>
+          <h2 id="menu-heading">Today's menu</h2>
+        </div>
+        <span id="itemCount" class="count-pill">Loading...</span>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">Loading menu...</p>
+      <div id="list" class="dish-list"></div>
+    </section>
+
+    <section class="form-card" aria-labelledby="form-heading">
+      <div class="form-intro">
+        <p class="eyebrow">ADD TO THE MENU</p>
+        <h2 id="form-heading">Add a new dish</h2>
+        <p>Enter a dish name and its price. The form sends a POST request to the REST API.</p>
+      </div>
+      <form id="addForm">
+        <label for="name">Dish name</label>
+        <input id="name" name="name" type="text" placeholder="e.g. Masala Dosa" maxlength="60" required>
+
+        <label for="price">Price (₹)</label>
+        <input id="price" name="price" type="number" placeholder="e.g. 60" min="0" step="0.01" value="0">
+
+        <button id="submitButton" type="submit">Add dish <span aria-hidden="true">＋</span></button>
+        <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <footer>CS543 · Web Services · Node.js &amp; Express · Tutorial 08</footer>
+  </main>
+
+  <script>
+    const listElement = document.getElementById('list');
+    const statusElement = document.getElementById('status');
+    const countElement = document.getElementById('itemCount');
+    const form = document.getElementById('addForm');
+    const formMessage = document.getElementById('formMessage');
+    const submitButton = document.getElementById('submitButton');
+
+    // GET /items — fetch menu data from the Express API and render it safely.
+    async function loadItems() {
+      statusElement.textContent = 'Loading menu...';
+      listElement.replaceChildren();
+
+      try {
+        const response = await fetch('/items');
+        if (!response.ok) throw new Error('Could not load the menu. Please try again.');
+        const items = await response.json();
+
+        countElement.textContent = `${items.length} ${items.length === 1 ? 'dish' : 'dishes'}`;
+        statusElement.textContent = items.length ? '' : 'No dishes yet. Add the first dish below.';
+
+        items.forEach((item) => {
+          const card = document.createElement('article');
+          card.className = 'dish-card';
+
+          const details = document.createElement('div');
+          details.className = 'dish-details';
+          const name = document.createElement('h3');
+          name.textContent = item.name;
+          const id = document.createElement('p');
+          id.textContent = `Menu item #${item.id}`;
+          details.append(name, id);
+
+          const price = document.createElement('span');
+          price.className = 'price';
+          price.textContent = `₹${Number(item.price).toLocaleString('en-IN')}`;
+          card.append(details, price);
+          listElement.append(card);
+        });
+      } catch (error) {
+        countElement.textContent = 'Unavailable';
+        statusElement.textContent = error.message;
+      }
+    }
+
+    // POST /items — send the form values as a JSON request body.
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      formMessage.textContent = '';
+      submitButton.disabled = true;
+      submitButton.textContent = 'Adding...';
+
+      const name = document.getElementById('name').value.trim();
+      const price = document.getElementById('price').value;
+
+      try {
+        const response = await fetch('/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, price })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Could not add this dish.');
+
+        form.reset();
+        document.getElementById('price').value = '0';
+        formMessage.textContent = `${result.name} was added successfully.`;
+        await loadItems();
+      } catch (error) {
+        formMessage.textContent = error.message;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = 'Add dish <span aria-hidden="true">＋</span>';
+      }
+    });
+
+    loadItems();
+  </script>
+</body>
+</html>

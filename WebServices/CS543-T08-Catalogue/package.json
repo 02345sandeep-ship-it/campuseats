@@ -1,0 +1,16 @@
+{
+  "name": "campuseats-catalogue",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CS543 Web Services Tutorial 08 — CampusEats Catalogue using Node.js and Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["cs543", "web-services", "rest-api", "express", "campuseats"],
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
