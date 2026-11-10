@@ -13,8 +13,10 @@ Replace the placeholders before submission.
 
 | Full name | Roll number |
 |---|---|
-| ADD TEAM MEMBER NAME | ADD ROLL NUMBER |
-| ADD TEAM MEMBER NAME | ADD ROLL NUMBER |
+| SANDEEP GUPTA | 20252651045 |
+| DEEPANKAR BEJ | 20252651018 |
+| RIKAM GOUDA | 20252651040 |
+| SHIVAM RAJPUT | 20252651052 |
 
 ## 1. Requirements
 
