@@ -1,0 +1,53 @@
+{
+  "info": {
+    "_postman_id": "a8c54300-8b11-4a08-9a08-20261031ce01",
+    "name": "CampusEats Assignment 8 API",
+    "description": "CS543 Assignment 8: Menu/Catalogue REST API. Start the Express server at localhost:3000 before sending requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" }
+  ],
+  "item": [
+    {
+      "name": "1. List all menu items (200)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/items" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });", "pm.test('Response is an array with seed records', function () { const data = pm.response.json(); pm.expect(data).to.be.an('array'); pm.expect(data.length).to.be.at.least(4); });"] } }]
+    },
+    {
+      "name": "2. Get item by ID 1 (200)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/items/1" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });", "pm.test('Item is Veg Thali', function () { pm.expect(pm.response.json().name).to.eql('Veg Thali'); });"] } }]
+    },
+    {
+      "name": "3. Get missing item (404)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/items/999" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 404', function () { pm.response.to.have.status(404); });"] } }]
+    },
+    {
+      "name": "4. Create menu item (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Chole Bhature\",\n  \"price\": 80,\n  \"available\": true\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/items"
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 201 Created', function () { pm.response.to.have.status(201); });", "pm.test('Created item has expected fields', function () { const data = pm.response.json(); pm.expect(data.id).to.be.a('number'); pm.expect(data.name).to.eql('Chole Bhature'); pm.expect(data.price).to.eql(80); pm.expect(data.available).to.eql(true); });"] } }]
+    },
+    {
+      "name": "5. Missing name validation (422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"price\": 80,\n  \"available\": true\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/items"
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 422', function () { pm.response.to.have.status(422); });", "pm.test('Error explains required name', function () { pm.expect(pm.response.json().error).to.eql('name required'); });"] } }]
+    },
+    {
+      "name": "6. List menu after create (200)",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/items" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', function () { pm.response.to.have.status(200); });", "pm.test('Created Chole Bhature is in the menu', function () { const data = pm.response.json(); pm.expect(data.some(item => item.name === 'Chole Bhature')).to.eql(true); });"] } }]
+    }
+  ]
+}
